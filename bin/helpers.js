@@ -1,10 +1,12 @@
+const fs = require("fs");
+const path = require("path");
+
 const startPattern1 =
   /^{\*[\*]{0,1} MODULE_SECTION_START:(([a-zA-Z]+),)*([a-zA-Z]+)+ \*}$/;
-const startPattern2 =
-  /^\/\/ MODULE_SECTION_START:(([a-zA-Z]+),)*([a-zA-Z]+)+$/g;
+const startPattern2 = /^\/\/ MODULE_SECTION_START:(([a-zA-Z]+),)*([a-zA-Z]+)+$/;
 const selectionPattern1 =
   /^{\*[\*]{0,1} MODULE_SECTION_START:([a-zA-Z,]+)+ \*}$/;
-const selectionPattern2 = /^\/\/ MODULE_SECTION_START:([a-zA-Z,]+)+$/g;
+const selectionPattern2 = /^\/\/ MODULE_SECTION_START:([a-zA-Z,]+)+$/;
 const endPattern1 = /^{\*[\*]{0,1} MODULE_SECTION_END \*}$/;
 const endPattern2 = /^\/\/ MODULE_SECTION_END$/;
 
@@ -108,7 +110,7 @@ function handleFile(filePath, supportedModules, selectedModules) {
   if (deleteIfUnselectedModuleFile(filePath, supportedModules, selectedModules))
     return;
 
-  deleteUnselectedModuleCode(filePath, modules, selectedModules);
+  deleteUnselectedModuleCode(filePath, supportedModules, selectedModules);
 }
 
 function handleDirectory(dirPath, supportedModules, selectedModules) {
@@ -136,11 +138,7 @@ function handleDirectory(dirPath, supportedModules, selectedModules) {
   }
 }
 
-export function removeUnselectedModules(
-  basePath,
-  supportedModules,
-  selectedModules
-) {
+function removeUnselectedModules(basePath, supportedModules, selectedModules) {
   const dirContents = fs.readdirSync(basePath);
   for (const obj of dirContents) {
     const objPath = path.join(basePath, obj);
@@ -151,3 +149,5 @@ export function removeUnselectedModules(
     }
   }
 }
+
+module.exports = { removeUnselectedModules };

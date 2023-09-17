@@ -23,8 +23,7 @@ runCommand(gitCheckoutCommand);
 runCommand(`cd ${repoName}`);
 
 // copy the modules file
-if (!fs.readdirSync(`./${repoName}`).includes(".modules.template"))
-  process.exit(0);
+if (!fs.existsSync(`./${repoName}/.modules.template`)) process.exit(0);
 
 const modules = fs
   .readFileSync(`./${repoName}/.modules.template`)
@@ -37,3 +36,5 @@ const modules = fs
 const moduleChoises = ["xmtp"];
 
 removeUnselectedModules(`./${repoName}`, modules, moduleChoises);
+
+fs.rmSync(`./${repoName}/.modules.template`);
